@@ -47,7 +47,7 @@ ma nastêpuj±ce dodatkowe mo¿liwo¶ci:
 
 %build
 %{__make} \
-	CC="%{__cc}"
+	CC="%{__cc} %{rpmcflags} -D__LINUX -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64"
 
 %install
 rm -rf $RPM_BUILD_ROOT
