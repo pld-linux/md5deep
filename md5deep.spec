@@ -32,7 +32,7 @@ dowolnej liczby plików. Program dzia³a pod Windows, Linuksem, FreeBSD,
 OS X, Solarisem i powinien dzia³aæ na wiêkszo¶ci innych platform.
 md5deep jest podobny do programu md5sum z pakietu GNU Coreutils, ale
 ma nastêpuj±ce dodatkowe mo¿liwo¶ci:
-- praca rekurencyjna - md5deep mo¿e rekurencyjnie sprawdzaæ ca³e 
+- praca rekurencyjna - md5deep mo¿e rekurencyjnie sprawdzaæ ca³e
   drzewo katalogów, obliczaj±c MD5 dla ka¿dego pliku w katalogu oraz
   dla ka¿dego pliku we wszystkich jego podkatalogach;
 - szacowanie czasu - md5deep mo¿e pokazywaæ oszacowania czasu trwania
