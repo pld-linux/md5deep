@@ -1,12 +1,13 @@
 Summary:	Compute MD5 message digests on an arbitrary number of files
 Summary(pl):	Obliczanie skrótów MD5 dla dowolnej liczby plików
 Name:		md5deep
-Version:	0.16
-Release:	1
+Version:	1.4
+Release:	0.1
 License:	GPL
 Group:		Applications/System
-Source0:	http://md5deep.sourceforge.net/%{name}-%{version}.tar.gz
-# Source0-md5:	a07715c3344524da1270e9eb39f9b9e1
+Source0:	http://switch.dl.sourceforge.net/sourceforge/%{name}/%{name}-%{version}.tar.gz
+# Source0-md5:	1411130dec66079e22beff7afad73df1
+Patch0:		%{name}-Makefile.patch
 URL:		http://md5deep.sourceforge.net/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -44,23 +45,26 @@ ma nastêpuj±ce dodatkowe mo¿liwo¶ci:
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %{__make} \
-	CC="%{__cc} %{rpmcflags} -D__LINUX -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64"
+	CC="%{__cc}" CFLAGS="%{rpmcflags}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_mandir}/man1}
 
 install md5deep $RPM_BUILD_ROOT%{_bindir}
+install sha1deep $RPM_BUILD_ROOT%{_bindir}
 install md5deep.1 $RPM_BUILD_ROOT%{_mandir}/man1
+install sha1deep.1 $RPM_BUILD_ROOT%{_mandir}/man1
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc CHANGES README TODO
-%attr(755,root,root) %{_bindir}/md5deep
+%doc CHANGES README
+%attr(755,root,root) %{_bindir}/*
 %{_mandir}/man1/*
