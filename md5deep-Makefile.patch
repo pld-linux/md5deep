@@ -1,0 +1,91 @@
+--- md5deep-1.4/Makefile.orig	2004-08-16 17:20:55.000000000 +0200
++++ md5deep-1.4/Makefile	2004-08-28 23:34:09.000000000 +0200
+@@ -1,8 +1,9 @@
+ 
+-RAW_CC = gcc
+-RAW_FLAGS = -Wall -O2
++CC = gcc
++CFLAGS = -Wall -O2
+ LINK_OPT = -lm
+ VERSION = 1.4
++DEFINES =
+ 
+ # You can cross compile this program for Win32 using Linux and the 
+ # MinGW compiler. See the README for details. If you have already
+@@ -19,7 +20,7 @@
+ MD5GOAL = md5deep
+ SHA1GOAL = sha1deep
+ 
+-RAW_FLAGS += -DVERSION=\"$(VERSION)\"
++DEFINES += -DVERSION=\"$(VERSION)\"
+ 
+ # Where we get installed
+ BIN = /usr/local/bin
+@@ -34,9 +35,9 @@
+ WINCC = $(RAW_CC) $(RAW_FLAGS) -D__WIN32
+ 
+ # Generic "how to compile C files"
+-CC = $(RAW_CC) $(RAW_FLAGS) -D__UNIX
++DEFINES += -D__UNIX
+ .c.o: 
+-	$(CC) -c $<
++	$(CC) $(CFLAGS) $(DEFINES) -c $<
+ 
+ # Definitions we'll need later (and that should rarely change)
+ HEADER_FILES = $(NAME).h md5.h sha1.h hashTable.h algorithms.h
+@@ -50,42 +51,42 @@
+ all: linux
+ 
+ hashTable-md5.o: hashTable.c
+-	$(CC) -DMD5 -c hashTable.c -o hashTable-md5.o
++	$(CC) $(CFLAGS) $(DEFINES) -DMD5 -c hashTable.c -o hashTable-md5.o
+ files-md5.o: files.c
+-	$(CC) -DMD5 -c files.c -o files-md5.o
++	$(CC) $(CFLAGS) $(DEFINES) -DMD5 -c files.c -o files-md5.o
+ hash-md5.o: hash.c
+-	$(CC) -DMD5 -c hash.c -o hash-md5.o
++	$(CC) $(CFLAGS) $(DEFINES) -DMD5 -c hash.c -o hash-md5.o
+ md5.o: md5.c
+-	$(CC) -DMD5 -c md5.c
++	$(CC) $(CFLAGS) $(DEFINES) -DMD5 -c md5.c
+ 
+ md5deep: $(OBJ) hash-md5.o md5.o files-md5.o hashTable-md5.o
+-	$(CC) $(OBJ) *md5.o -o $(MD5GOAL) $(LINK_OPT)
++	$(CC) $(CFLAGS) $(DEFINES) $(OBJ) *md5.o -o $(MD5GOAL) $(LINK_OPT)
+ 
+ 
+ hashTable-sha1.o: hashTable.c
+-	$(CC) -DSHA1 -c hashTable.c -o hashTable-sha1.o
++	$(CC) $(CFLAGS) $(DEFINES) -DSHA1 -c hashTable.c -o hashTable-sha1.o
+ files-sha1.o: files.c
+-	$(CC) -DSHA1 -c files.c -o files-sha1.o
++	$(CC) $(CFLAGS) $(DEFINES) -DSHA1 -c files.c -o files-sha1.o
+ hash-sha1.o: hash.c
+-	$(CC) -DSHA1 -c hash.c -o hash-sha1.o
++	$(CC) $(CFLAGS) $(DEFINES) -DSHA1 -c hash.c -o hash-sha1.o
+ sha1.o:
+-	$(CC) -DSHA1 -c sha1.c
++	$(CC) $(CFLAGS) $(DEFINES) -DSHA1 -c sha1.c
+ 
+ sha1deep: $(OBJ) hash-sha1.o sha1.o files-sha1.o hashTable-sha1.o
+-	$(CC) $(OBJ) *sha1.o -o $(SHA1GOAL) $(LINK_OPT)
++	$(CC) $(CFLAGS) $(DEFINES) $(OBJ) *sha1.o -o $(SHA1GOAL) $(LINK_OPT)
+ 
+ 
+ 
+ goals: md5deep sha1deep
+ 
+-linux: CC += -D__LINUX -DLARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
++linux: FLAGS += -D__LINUX -DLARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
+ linux: goals
+ 
+ sunos: solaris
+-solaris: CC += -D__SOLARIS -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
++solaris: FLAGS += -D__SOLARIS -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
+ solaris: goals
+ 
+-mac: CC += -D__MACOSX
++mac: FLAGS += -D__MACOSX
+ mac: goals
+ 
+ macinstall: mac
