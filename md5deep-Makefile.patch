@@ -1,5 +1,6 @@
---- md5deep-1.4/Makefile.orig	2004-08-16 17:20:55.000000000 +0200
-+++ md5deep-1.4/Makefile	2004-08-28 23:34:09.000000000 +0200
+diff -urN md5deep-1.5/Makefile md5deep-1.5.new/Makefile
+--- md5deep-1.5/Makefile	2004-08-31 18:18:08.000000000 +0200
++++ md5deep-1.5.new/Makefile	2005-02-20 23:49:23.160839928 +0100
 @@ -1,8 +1,9 @@
  
 -RAW_CC = gcc
@@ -7,34 +8,57 @@
 +CC = gcc
 +CFLAGS = -Wall -O2
  LINK_OPT = -lm
- VERSION = 1.4
+ VERSION = 1.5
 +DEFINES =
  
  # You can cross compile this program for Win32 using Linux and the 
  # MinGW compiler. See the README for details. If you have already
-@@ -19,7 +20,7 @@
- MD5GOAL = md5deep
- SHA1GOAL = sha1deep
+@@ -25,11 +26,11 @@
+ MAN_PAGES = $(MD5GOAL).1 $(SHA1GOAL).1 $(SHA256GOAL).1
+ RM_DOCS = $(MD5GOAL).1,$(SHA1GOAL).1,$(SHA256GOAL).1
  
 -RAW_FLAGS += -DVERSION=\"$(VERSION)\"
 +DEFINES += -DVERSION=\"$(VERSION)\"
  
  # Where we get installed
- BIN = /usr/local/bin
-@@ -34,9 +35,9 @@
+-BIN = /usr/local/bin
+-MAN = /usr/local/man/man1
++BIN = /usr/bin
++MAN = /usr/man/man1
+ 
+ # Setup for compiling and cross-compiling for Windows
+ # The CR_ prefix refers to cross compiling from OSX to Windows
+@@ -43,9 +44,8 @@
  WINCC = $(RAW_CC) $(RAW_FLAGS) -D__WIN32
  
  # Generic "how to compile C files"
 -CC = $(RAW_CC) $(RAW_FLAGS) -D__UNIX
-+DEFINES += -D__UNIX
  .c.o: 
 -	$(CC) -c $<
 +	$(CC) $(CFLAGS) $(DEFINES) -c $<
  
  # Definitions we'll need later (and that should rarely change)
- HEADER_FILES = $(NAME).h md5.h sha1.h hashTable.h algorithms.h
-@@ -50,42 +51,42 @@
- all: linux
+ HEADER_FILES = $(NAME).h hashTable.h algorithms.h sha256.h md5.h sha1.h
+@@ -64,14 +64,14 @@
+ 
+ goals: $(ALL_GOALS)
+ 
+-linux: CC += -D__LINUX -DLARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
++linux: DEFINES += -D__LINUX -DLARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
+ linux: goals
+ 
+ sunos: solaris
+-solaris: CC += -D__SOLARIS -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
++solaris: DEFINES += -D__SOLARIS -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
+ solaris: goals
+ 
+-mac: CC += -D__MACOSX
++mac: DEFINES += -D__MACOSX
+ mac: goals
+ 
+ unix: goals
+@@ -105,44 +105,44 @@
+ #---------------------------------------------------------------------
  
  hashTable-md5.o: hashTable.c
 -	$(CC) -DMD5 -c hashTable.c -o hashTable-md5.o
@@ -52,6 +76,26 @@
  md5deep: $(OBJ) hash-md5.o md5.o files-md5.o hashTable-md5.o
 -	$(CC) $(OBJ) *md5.o -o $(MD5GOAL) $(LINK_OPT)
 +	$(CC) $(CFLAGS) $(DEFINES) $(OBJ) *md5.o -o $(MD5GOAL) $(LINK_OPT)
+ 
+ 
+ 
+ hashTable-sha256.o: hashTable.c
+-	$(CC) -DSHA256 -c hashTable.c -o hashTable-sha256.o
++	$(CC) $(CFLAGS) $(DEFINES) -DSHA256 -c hashTable.c -o hashTable-sha256.o
+ files-sha256.o: files.c
+-	$(CC) -DSHA256 -c files.c -o files-sha256.o
++	$(CC) $(CFLAGS) $(DEFINES) -DSHA256 -c files.c -o files-sha256.o
+ hash-sha256.o: hash.c
+-	$(CC) -DSHA256 -c hash.c -o hash-sha256.o
++	$(CC) $(CFLAGS) $(DEFINES) -DSHA256 -c hash.c -o hash-sha256.o
+ sha256.o: sha256.c
+-	$(CC) -DSHA256 -c sha256.c
++	$(CC) $(CFLAGS) $(DEFINES) -DSHA256 -c sha256.c
+ 
+ sha256deep: $(OBJ) hash-sha256.o sha256.o files-sha256.o hashTable-sha256.o
+-	$(CC) $(OBJ) *sha256.o -o $(SHA256GOAL) $(LINK_OPT)
++	$(CC) $(CFLAGS) $(DEFINES) $(OBJ) *sha256.o -o $(SHA256GOAL) $(LINK_OPT)
+ 
  
  
  hashTable-sha1.o: hashTable.c
@@ -72,20 +116,13 @@
 +	$(CC) $(CFLAGS) $(DEFINES) $(OBJ) *sha1.o -o $(SHA1GOAL) $(LINK_OPT)
  
  
+ #---------------------------------------------------------------------
+@@ -151,7 +151,7 @@
  
- goals: md5deep sha1deep
+ install: goals
+ 	install -m 755 $(ALL_GOALS) $(BIN)
+-	install -m 444 $(MAN_PAGES) $(MAN)
++	install -m 644 $(MAN_PAGES) $(MAN)
  
--linux: CC += -D__LINUX -DLARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
-+linux: DEFINES += -D__LINUX -DLARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
- linux: goals
- 
- sunos: solaris
--solaris: CC += -D__SOLARIS -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
-+solaris: DEFINES += -D__SOLARIS -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
- solaris: goals
- 
--mac: CC += -D__MACOSX
-+mac: DEFINES += -D__MACOSX
- mac: goals
- 
- macinstall: mac
+ macinstall: BIN = /usr/bin/
+ macinstall: MAN = /usr/share/man/man1/
