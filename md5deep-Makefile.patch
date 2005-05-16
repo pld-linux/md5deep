@@ -1,34 +1,31 @@
-diff -urN md5deep-1.5/Makefile md5deep-1.5.new/Makefile
---- md5deep-1.5/Makefile	2004-08-31 18:18:08.000000000 +0200
-+++ md5deep-1.5.new/Makefile	2005-02-20 23:49:23.160839928 +0100
-@@ -1,8 +1,9 @@
+--- md5deep-1.6/Makefile.orig	2003-11-29 21:56:58.000000000 +0000
++++ md5deep-1.6/Makefile	2003-11-29 22:05:34.000000000 +0000
+@@ -1,11 +1,11 @@
  
 -RAW_CC = gcc
 -RAW_FLAGS = -Wall -O2
 +CC = gcc
 +CFLAGS = -Wall -O2
  LINK_OPT = -lm
- VERSION = 1.5
+ VERSION = 1.6
+-
 +DEFINES =
+ # Where we get installed
+-PREFIX = /usr/local
++PREFIX = /usr
  
- # You can cross compile this program for Win32 using Linux and the 
- # MinGW compiler. See the README for details. If you have already
-@@ -25,11 +26,11 @@
- MAN_PAGES = $(MD5GOAL).1 $(SHA1GOAL).1 $(SHA256GOAL).1
- RM_DOCS = $(MD5GOAL).1,$(SHA1GOAL).1,$(SHA256GOAL).1
+ # You can cross compile this program for Win32 using the MinGW compiler
+ # See README for details. Put the $PREFIX used to install MinGW in CR_BASE
+@@ -36,7 +36,7 @@
+ MAN_PAGES = md5deep.1
+ RM_DOCS = md5deep.1,sha1deep.1,sha256deep.1,whirlpooldeep.1
  
 -RAW_FLAGS += -DVERSION=\"$(VERSION)\"
 +DEFINES += -DVERSION=\"$(VERSION)\"
  
- # Where we get installed
--BIN = /usr/local/bin
--MAN = /usr/local/man/man1
-+BIN = /usr/bin
-+MAN = /usr/man/man1
- 
  # Setup for compiling and cross-compiling for Windows
  # The CR_ prefix refers to cross compiling from OSX to Windows
-@@ -43,9 +44,8 @@
+@@ -52,9 +52,8 @@
  WINCC = $(RAW_CC) $(RAW_FLAGS) -D__WIN32
  
  # Generic "how to compile C files"
@@ -38,13 +35,13 @@ diff -urN md5deep-1.5/Makefile md5deep-1.5.new/Makefile
 +	$(CC) $(CFLAGS) $(DEFINES) -c $<
  
  # Definitions we'll need later (and that should rarely change)
- HEADER_FILES = $(NAME).h hashTable.h algorithms.h sha256.h md5.h sha1.h
-@@ -64,14 +64,14 @@
+ HEADER_FILES = $(NAME).h hashTable.h algorithms.h
+@@ -74,14 +73,14 @@
  
  goals: $(ALL_GOALS)
  
--linux: CC += -D__LINUX -DLARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
-+linux: DEFINES += -D__LINUX -DLARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
+-linux: CC += -D__LINUX -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
++linux: DEFINES += -D__LINUX -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
  linux: goals
  
  sunos: solaris
@@ -57,12 +54,9 @@ diff -urN md5deep-1.5/Makefile md5deep-1.5.new/Makefile
  mac: goals
  
  unix: goals
-@@ -105,44 +105,44 @@
- #---------------------------------------------------------------------
+@@ -127,38 +126,38 @@
  
- hashTable-md5.o: hashTable.c
--	$(CC) -DMD5 -c hashTable.c -o hashTable-md5.o
-+	$(CC) $(CFLAGS) $(DEFINES) -DMD5 -c hashTable.c -o hashTable-md5.o
+ 
  files-md5.o: files.c
 -	$(CC) -DMD5 -c files.c -o files-md5.o
 +	$(CC) $(CFLAGS) $(DEFINES) -DMD5 -c files.c -o files-md5.o
@@ -73,15 +67,12 @@ diff -urN md5deep-1.5/Makefile md5deep-1.5.new/Makefile
 -	$(CC) -DMD5 -c md5.c
 +	$(CC) $(CFLAGS) $(DEFINES) -DMD5 -c md5.c
  
- md5deep: $(OBJ) hash-md5.o md5.o files-md5.o hashTable-md5.o
+ md5deep: $(OBJ) hash-md5.o md5.o files-md5.o 
 -	$(CC) $(OBJ) *md5.o -o $(MD5GOAL) $(LINK_OPT)
 +	$(CC) $(CFLAGS) $(DEFINES) $(OBJ) *md5.o -o $(MD5GOAL) $(LINK_OPT)
  
  
  
- hashTable-sha256.o: hashTable.c
--	$(CC) -DSHA256 -c hashTable.c -o hashTable-sha256.o
-+	$(CC) $(CFLAGS) $(DEFINES) -DSHA256 -c hashTable.c -o hashTable-sha256.o
  files-sha256.o: files.c
 -	$(CC) -DSHA256 -c files.c -o files-sha256.o
 +	$(CC) $(CFLAGS) $(DEFINES) -DSHA256 -c files.c -o files-sha256.o
@@ -92,15 +83,12 @@ diff -urN md5deep-1.5/Makefile md5deep-1.5.new/Makefile
 -	$(CC) -DSHA256 -c sha256.c
 +	$(CC) $(CFLAGS) $(DEFINES) -DSHA256 -c sha256.c
  
- sha256deep: $(OBJ) hash-sha256.o sha256.o files-sha256.o hashTable-sha256.o
+ sha256deep: $(OBJ) hash-sha256.o sha256.o files-sha256.o
 -	$(CC) $(OBJ) *sha256.o -o $(SHA256GOAL) $(LINK_OPT)
 +	$(CC) $(CFLAGS) $(DEFINES) $(OBJ) *sha256.o -o $(SHA256GOAL) $(LINK_OPT)
  
  
  
- hashTable-sha1.o: hashTable.c
--	$(CC) -DSHA1 -c hashTable.c -o hashTable-sha1.o
-+	$(CC) $(CFLAGS) $(DEFINES) -DSHA1 -c hashTable.c -o hashTable-sha1.o
  files-sha1.o: files.c
 -	$(CC) -DSHA1 -c files.c -o files-sha1.o
 +	$(CC) $(CFLAGS) $(DEFINES) -DSHA1 -c files.c -o files-sha1.o
@@ -111,18 +99,9 @@ diff -urN md5deep-1.5/Makefile md5deep-1.5.new/Makefile
 -	$(CC) -DSHA1 -c sha1.c
 +	$(CC) $(CFLAGS) $(DEFINES) -DSHA1 -c sha1.c
  
- sha1deep: $(OBJ) hash-sha1.o sha1.o files-sha1.o hashTable-sha1.o
+ sha1deep: $(OBJ) hash-sha1.o sha1.o files-sha1.o
 -	$(CC) $(OBJ) *sha1.o -o $(SHA1GOAL) $(LINK_OPT)
 +	$(CC) $(CFLAGS) $(DEFINES) $(OBJ) *sha1.o -o $(SHA1GOAL) $(LINK_OPT)
  
  
  #---------------------------------------------------------------------
-@@ -151,7 +151,7 @@
- 
- install: goals
- 	install -m 755 $(ALL_GOALS) $(BIN)
--	install -m 444 $(MAN_PAGES) $(MAN)
-+	install -m 644 $(MAN_PAGES) $(MAN)
- 
- macinstall: BIN = /usr/bin/
- macinstall: MAN = /usr/share/man/man1/
