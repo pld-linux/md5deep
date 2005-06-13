@@ -1,12 +1,12 @@
 Summary:	Compute MD5 message digests on an arbitrary number of files
 Summary(pl):	Obliczanie skrótów MD5 dla dowolnej liczby plików
 Name:		md5deep
-Version:	1.6
+Version:	1.7
 Release:	1
 License:	GPL
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/md5deep/%{name}-%{version}.tar.gz
-# Source0-md5:	b87a26c856798457ed10bc9486178453
+# Source0-md5:	55fda350be1116f33b846245e9f86cb7
 Patch0:		%{name}-Makefile.patch
 URL:		http://md5deep.sourceforge.net/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -49,7 +49,8 @@ ma nastêpuj±ce dodatkowe mo¿liwo¶ci:
 
 %build
 %{__make} \
-	CC="%{__cc}" CFLAGS="%{rpmcflags}"
+	CC="%{__cc}" \
+	CFLAGS="%{rpmcflags}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -58,6 +59,7 @@ install -d $RPM_BUILD_ROOT{%{_bindir},%{_mandir}/man1}
 install md5deep $RPM_BUILD_ROOT%{_bindir}
 install sha1deep $RPM_BUILD_ROOT%{_bindir}
 install sha256deep $RPM_BUILD_ROOT%{_bindir}
+install whirlpooldeep $RPM_BUILD_ROOT%{_bindir}
 install md5deep.1 $RPM_BUILD_ROOT%{_mandir}/man1
 
 %clean
