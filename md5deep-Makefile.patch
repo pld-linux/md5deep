@@ -1,5 +1,6 @@
---- md5deep-1.6/Makefile.orig	2003-11-29 21:56:58.000000000 +0000
-+++ md5deep-1.6/Makefile	2003-11-29 22:05:34.000000000 +0000
+diff -urN md5deep-1.7.new/Makefile md5deep-1.7/Makefile
+--- md5deep-1.7.new/Makefile	2005-06-13 14:52:04.000000000 +0200
++++ md5deep-1.7/Makefile	2005-06-13 15:09:09.000000000 +0200
 @@ -1,11 +1,11 @@
  
 -RAW_CC = gcc
@@ -7,7 +8,7 @@
 +CC = gcc
 +CFLAGS = -Wall -O2
  LINK_OPT = -lm
- VERSION = 1.6
+ VERSION = 1.7
 -
 +DEFINES =
  # Where we get installed
@@ -29,14 +30,14 @@
  WINCC = $(RAW_CC) $(RAW_FLAGS) -D__WIN32
  
  # Generic "how to compile C files"
--CC = $(RAW_CC) $(RAW_FLAGS) -D__UNIX
+-CC = $(RAW_CC) $(RAW_FLAGS)
  .c.o: 
 -	$(CC) -c $<
 +	$(CC) $(CFLAGS) $(DEFINES) -c $<
  
  # Definitions we'll need later (and that should rarely change)
  HEADER_FILES = $(NAME).h hashTable.h algorithms.h
-@@ -74,14 +73,14 @@
+@@ -74,11 +73,11 @@
  
  goals: $(ALL_GOALS)
  
@@ -49,12 +50,23 @@
 +solaris: DEFINES += -D__SOLARIS -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
  solaris: goals
  
--mac: CC += -D__MACOSX
-+mac: DEFINES += -D__MACOSX
  mac: goals
+@@ -115,49 +114,49 @@
+ #---------------------------------------------------------------------
  
- unix: goals
-@@ -127,38 +126,38 @@
+ files-whirlpool.o: files.c
+-	$(CC) -DWHIRLPOOL -c files.c -o files-whirlpool.o
++	$(CC) $(CFLAGS) $(DEFINES) -DWHIRLPOOL -c files.c -o files-whirlpool.o
+ hash-whirlpool.o: hash.c
+-	$(CC) -DWHIRLPOOL -c hash.c -o hash-whirlpool.o
++	$(CC) $(CFLAGS) $(DEFINES) -DWHIRLPOOL -c hash.c -o hash-whirlpool.o
+ whirlpool.o: whirlpool.c
+-	$(CC) -DWHIRLPOOL -c whirlpool.c
++	$(CC) $(CFLAGS) $(DEFINES) -DWHIRLPOOL -c whirlpool.c
+ 
+ whirlpooldeep: $(OBJ) hash-whirlpool.o whirlpool.o files-whirlpool.o
+-	$(CC) $(OBJ) *whirlpool.o -o $(WHIRLGOAL) $(LINK_OPT)
++	$(CC) $(CFLAGS) $(DEFINES) $(OBJ) *whirlpool.o -o $(WHIRLGOAL) $(LINK_OPT)
  
  
  files-md5.o: files.c
