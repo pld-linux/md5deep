@@ -1,33 +1,26 @@
-diff -urN md5deep-1.7.new/Makefile md5deep-1.7/Makefile
---- md5deep-1.7.new/Makefile	2005-06-13 14:52:04.000000000 +0200
-+++ md5deep-1.7/Makefile	2005-06-13 15:09:09.000000000 +0200
-@@ -1,11 +1,11 @@
+--- md5deep-1.8/Makefile.orig	2005-08-08 02:51:28.000000000 +0200
++++ md5deep-1.8/Makefile	2005-09-13 08:19:45.597384768 +0200
+@@ -1,10 +1,11 @@
  
 -RAW_CC = gcc
 -RAW_FLAGS = -Wall -O2
 +CC = gcc
++DEFINES =
 +CFLAGS = -Wall -O2
  LINK_OPT = -lm
- VERSION = 1.7
--
-+DEFINES =
+ 
  # Where we get installed
 -PREFIX = /usr/local
 +PREFIX = /usr
  
  # You can cross compile this program for Win32 using the MinGW compiler
  # See README for details. Put the $PREFIX used to install MinGW in CR_BASE
-@@ -36,7 +36,7 @@
- MAN_PAGES = md5deep.1
- RM_DOCS = md5deep.1,sha1deep.1,sha256deep.1,whirlpooldeep.1
+@@ -39,12 +40,11 @@
+ WINDOC = README.txt CHANGES.txt
  
+ MAN_PAGE   = $(NAME).1
 -RAW_FLAGS += -DVERSION=\"$(VERSION)\"
 +DEFINES += -DVERSION=\"$(VERSION)\"
- 
- # Setup for compiling and cross-compiling for Windows
- # The CR_ prefix refers to cross compiling from OSX to Windows
-@@ -52,9 +52,8 @@
- WINCC = $(RAW_CC) $(RAW_FLAGS) -D__WIN32
  
  # Generic "how to compile C files"
 -CC = $(RAW_CC) $(RAW_FLAGS)
@@ -35,11 +28,11 @@ diff -urN md5deep-1.7.new/Makefile md5deep-1.7/Makefile
 -	$(CC) -c $<
 +	$(CC) $(CFLAGS) $(DEFINES) -c $<
  
- # Definitions we'll need later (and that should rarely change)
- HEADER_FILES = $(NAME).h hashTable.h algorithms.h
-@@ -74,11 +73,11 @@
+ #---------------------------------------------------------------------
+ # OPERATING SYSTEM DIRECTIVES
+@@ -54,11 +54,11 @@
  
- goals: $(ALL_GOALS)
+ goals: $(OBJ) $(ALL_GOALS)
  
 -linux: CC += -D__LINUX -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
 +linux: DEFINES += -D__LINUX -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
@@ -51,69 +44,85 @@ diff -urN md5deep-1.7.new/Makefile md5deep-1.7/Makefile
  solaris: goals
  
  mac: goals
-@@ -115,49 +114,49 @@
+@@ -87,61 +87,61 @@
  #---------------------------------------------------------------------
  
- files-whirlpool.o: files.c
--	$(CC) -DWHIRLPOOL -c files.c -o files-whirlpool.o
-+	$(CC) $(CFLAGS) $(DEFINES) -DWHIRLPOOL -c files.c -o files-whirlpool.o
- hash-whirlpool.o: hash.c
--	$(CC) -DWHIRLPOOL -c hash.c -o hash-whirlpool.o
-+	$(CC) $(CFLAGS) $(DEFINES) -DWHIRLPOOL -c hash.c -o hash-whirlpool.o
- whirlpool.o: whirlpool.c
--	$(CC) -DWHIRLPOOL -c whirlpool.c
-+	$(CC) $(CFLAGS) $(DEFINES) -DWHIRLPOOL -c whirlpool.c
+ files-tiger.o: files.c
+-	$(CC) -c $< -o $@
++	$(CC) $(CFLAGS) $(DEFINES) -c $< -o $@
+ hash-tiger.o: hash.c
+-	$(CC) -c $< -o $@
++	$(CC) $(CFLAGS) $(DEFINES) -c $< -o $@
  
- whirlpooldeep: $(OBJ) hash-whirlpool.o whirlpool.o files-whirlpool.o
--	$(CC) $(OBJ) *whirlpool.o -o $(WHIRLGOAL) $(LINK_OPT)
-+	$(CC) $(CFLAGS) $(DEFINES) $(OBJ) *whirlpool.o -o $(WHIRLGOAL) $(LINK_OPT)
+ TIGEROBJ = files-tiger.o hash-tiger.o tiger.o
+-tigerdeep: CC += -DTIGER
++tigerdeep: DEFINES += -DTIGER
+ tigerdeep: $(OBJ) $(TIGEROBJ)
+-	$(CC) $(OBJ) $(TIGEROBJ) -o $@$(SUFFIX) $(LINK_OPT)
++	$(CC) $(CFLAGS) $(DEFINES) $(OBJ) $(TIGEROBJ) -o $@$(SUFFIX) $(LINK_OPT)
+ 
+ 
+ 
+ files-whirlpool.o: files.c
+-	$(CC) -c $< -o $@
++	$(CC) $(CFLAGS) $(DEFINES) -c $< -o $@
+ hash-whirlpool.o: hash.c
+-	$(CC) -c $< -o $@
++	$(CC) $(CFLAGS) $(DEFINES) -c $< -o $@
+ 
+ WHIRLPOOLOBJ = files-whirlpool.o hash-whirlpool.o whirlpool.o
+-whirlpooldeep: CC += -DWHIRLPOOL
++whirlpooldeep: DEFINES += -DWHIRLPOOL
+ whirlpooldeep: $(OBJ) $(WHIRLPOOLOBJ)
+-	$(CC) $(OBJ) $(WHIRLPOOLOBJ) -o $@$(SUFFIX) $(LINK_OPT)
++	$(CC) $(CFLAGS) $(DEFINES) $(OBJ) $(WHIRLPOOLOBJ) -o $@$(SUFFIX) $(LINK_OPT)
+ 
  
  
  files-md5.o: files.c
--	$(CC) -DMD5 -c files.c -o files-md5.o
-+	$(CC) $(CFLAGS) $(DEFINES) -DMD5 -c files.c -o files-md5.o
+-	$(CC) -c $< -o $@
++	$(CC) $(CFLAGS) $(DEFINES) -c $< -o $@
  hash-md5.o: hash.c
--	$(CC) -DMD5 -c hash.c -o hash-md5.o
-+	$(CC) $(CFLAGS) $(DEFINES) -DMD5 -c hash.c -o hash-md5.o
- md5.o: md5.c
--	$(CC) -DMD5 -c md5.c
-+	$(CC) $(CFLAGS) $(DEFINES) -DMD5 -c md5.c
+-	$(CC) -c $< -o $@
++	$(CC) $(CFLAGS) $(DEFINES) -c $< -o $@
  
- md5deep: $(OBJ) hash-md5.o md5.o files-md5.o 
--	$(CC) $(OBJ) *md5.o -o $(MD5GOAL) $(LINK_OPT)
-+	$(CC) $(CFLAGS) $(DEFINES) $(OBJ) *md5.o -o $(MD5GOAL) $(LINK_OPT)
+ MD5OBJ = files-md5.o hash-md5.o md5.o
+-md5deep: CC += -DMD5
++md5deep: DEFINES += -DMD5
+ md5deep: $(OBJ) $(MD5OBJ)
+-	$(CC) $(OBJ) $(MD5OBJ) -o $@$(SUFFIX) $(LINK_OPT)
++	$(CC) $(CFLAGS) $(DEFINES) $(OBJ) $(MD5OBJ) -o $@$(SUFFIX) $(LINK_OPT)
  
  
  
  files-sha256.o: files.c
--	$(CC) -DSHA256 -c files.c -o files-sha256.o
-+	$(CC) $(CFLAGS) $(DEFINES) -DSHA256 -c files.c -o files-sha256.o
+-	$(CC) -c $< -o $@
++	$(CC) $(CFLAGS) $(DEFINES) -c $< -o $@
  hash-sha256.o: hash.c
--	$(CC) -DSHA256 -c hash.c -o hash-sha256.o
-+	$(CC) $(CFLAGS) $(DEFINES) -DSHA256 -c hash.c -o hash-sha256.o
- sha256.o: sha256.c
--	$(CC) -DSHA256 -c sha256.c
-+	$(CC) $(CFLAGS) $(DEFINES) -DSHA256 -c sha256.c
+-	$(CC) -c $< -o $@
++	$(CC) $(CFLAGS) $(DEFINES) -c $< -o $@
  
- sha256deep: $(OBJ) hash-sha256.o sha256.o files-sha256.o
--	$(CC) $(OBJ) *sha256.o -o $(SHA256GOAL) $(LINK_OPT)
-+	$(CC) $(CFLAGS) $(DEFINES) $(OBJ) *sha256.o -o $(SHA256GOAL) $(LINK_OPT)
+ SHA256OBJ = files-sha256.o hash-sha256.o sha256.o
+-sha256deep: CC += -DSHA256
++sha256deep: DEFINES += -DSHA256
+ sha256deep: $(OBJ) $(SHA256OBJ)
+-	$(CC) $(OBJ) $(SHA256OBJ) -o $@$(SUFFIX) $(LINK_OPT)
++	$(CC) $(CFLAGS) $(DEFINES) $(OBJ) $(SHA256OBJ) -o $@$(SUFFIX) $(LINK_OPT)
  
  
  
  files-sha1.o: files.c
--	$(CC) -DSHA1 -c files.c -o files-sha1.o
-+	$(CC) $(CFLAGS) $(DEFINES) -DSHA1 -c files.c -o files-sha1.o
+-	$(CC) -c $< -o $@
++	$(CC) $(CFLAGS) $(DEFINES) -c $< -o $@
  hash-sha1.o: hash.c
--	$(CC) -DSHA1 -c hash.c -o hash-sha1.o
-+	$(CC) $(CFLAGS) $(DEFINES) -DSHA1 -c hash.c -o hash-sha1.o
- sha1.o:
--	$(CC) -DSHA1 -c sha1.c
-+	$(CC) $(CFLAGS) $(DEFINES) -DSHA1 -c sha1.c
- 
- sha1deep: $(OBJ) hash-sha1.o sha1.o files-sha1.o
--	$(CC) $(OBJ) *sha1.o -o $(SHA1GOAL) $(LINK_OPT)
-+	$(CC) $(CFLAGS) $(DEFINES) $(OBJ) *sha1.o -o $(SHA1GOAL) $(LINK_OPT)
+-	$(CC) -c $< -o $@
++	$(CC) $(CFLAGS) $(DEFINES) -c $< -o $@
+ SHA1OBJ = files-sha1.o hash-sha1.o sha1.o
+-sha1deep: CC += -DSHA1
++sha1deep: DEFINES += -DSHA1
+ sha1deep: $(OBJ) $(SHA1OBJ)
+-	$(CC) $(OBJ) $(SHA1OBJ) -o $@$(SUFFIX) $(LINK_OPT)
++	$(CC) $(CFLAGS) $(DEFINES) $(OBJ) $(SHA1OBJ) -o $@$(SUFFIX) $(LINK_OPT)
  
  
  #---------------------------------------------------------------------
