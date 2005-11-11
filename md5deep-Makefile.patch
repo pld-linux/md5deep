@@ -1,10 +1,10 @@
---- md5deep-1.8/Makefile.orig	2005-08-08 00:51:28.000000000 +0000
-+++ md5deep-1.8/Makefile	2005-09-22 10:17:56.767577500 +0000
+diff -urN md5deep-1.9.1/Makefile md5deep-1.9.1.new/Makefile
+--- md5deep-1.9.1/Makefile	2005-11-08 02:03:17.000000000 +0100
++++ md5deep-1.9.1.new/Makefile	2005-11-12 00:40:17.000000000 +0100
 @@ -1,10 +1,11 @@
  
--RAW_CC = gcc
--RAW_FLAGS = -Wall -O2
-+CC = gcc
+ CC = gcc
+-CFLAGS = -Wall -O3
 +DEFINES =
 +CFLAGS = -Wall -O2
  LINK_OPT = -lm
@@ -15,26 +15,23 @@
  
  # You can cross compile this program for Win32 using the MinGW compiler
  # See README for details. Put the $PREFIX used to install MinGW in CR_BASE
-@@ -39,12 +40,11 @@
+@@ -39,7 +40,10 @@
  WINDOC = README.txt CHANGES.txt
  
  MAN_PAGE   = $(NAME).1
--RAW_FLAGS += -DVERSION=\"$(VERSION)\"
+-CFLAGS += -D VERSION=\"$(VERSION)\"
 +DEFINES += -DVERSION=\"$(VERSION)\"
- 
- # Generic "how to compile C files"
--CC = $(RAW_CC) $(RAW_FLAGS)
- .c.o: 
--	$(CC) -c $<
++
++.c.o:
 +	$(CC) $(CFLAGS) $(DEFINES) -c $<
  
  #---------------------------------------------------------------------
  # OPERATING SYSTEM DIRECTIVES
-@@ -54,11 +54,11 @@
+@@ -49,11 +53,11 @@
  
  goals: $(OBJ) $(ALL_GOALS)
  
--linux: CC += -D__LINUX -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
+-linux: CFLAGS += -D__LINUX -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
 +linux: DEFINES += -D__LINUX -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
  linux: goals
  
@@ -43,8 +40,8 @@
 +solaris: DEFINES += -D__SOLARIS -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
  solaris: goals
  
- mac: goals
-@@ -87,61 +87,61 @@
+ # There are no additional defines for OS X as _APPLE_ is defined for us.
+@@ -83,61 +87,61 @@
  #---------------------------------------------------------------------
  
  files-tiger.o: files.c
@@ -126,7 +123,7 @@
  
  
  #---------------------------------------------------------------------
-@@ -149,7 +149,7 @@
+@@ -145,7 +149,7 @@
  #---------------------------------------------------------------------
  
  BIN = $(PREFIX)/bin
