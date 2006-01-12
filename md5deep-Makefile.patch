@@ -10,7 +10,7 @@
  LINK_OPT = -lm
  
  NAME     = md5deep
- VERSION  = 1.9.2
+ VERSION  = 1.9.3
  
  # Where we get installed
 -PREFIX = /usr/local
