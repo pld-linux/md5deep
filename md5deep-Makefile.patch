@@ -1,17 +1,17 @@
-diff -urN md5deep-1.10/Makefile md5deep-1.10.new/Makefile
---- md5deep-1.10/Makefile	2006-02-02 04:23:23.000000000 +0100
-+++ md5deep-1.10.new/Makefile	2006-02-09 17:54:13.000000000 +0100
+diff -urN md5deep-1.12/Makefile md5deep-1.12.new/Makefile
+--- md5deep-1.12/Makefile	2006-04-03 03:18:07.000000000 +0200
++++ md5deep-1.12.new/Makefile	2006-04-03 19:47:43.000000000 +0200
 @@ -1,13 +1,13 @@
 -
 -CC       = gcc
--CFLAGS   = -Wall -O3
+-CFLAGS   = -Wall -W -O3
 +OURCC   := gcc
 +CC       = $(OURCC)
 +CFLAGS   = -Wall $(OPTFLAGS)
  LINK_OPT = -lm
  
  NAME     = md5deep
- VERSION  = 1.10
+ VERSION  = 1.12
  
  # Where we get installed
 -PREFIX = /usr/local
@@ -19,7 +19,7 @@ diff -urN md5deep-1.10/Makefile md5deep-1.10.new/Makefile
  
  # You can cross compile this program for Win32 using the MinGW compiler
  # See README for details. Put the $PREFIX used to install MinGW in CR_BASE
-@@ -149,7 +149,7 @@
+@@ -150,7 +150,7 @@
  #---------------------------------------------------------------------
  
  BIN = $(PREFIX)/bin
