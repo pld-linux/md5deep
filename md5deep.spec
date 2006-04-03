@@ -1,12 +1,12 @@
 Summary:	Compute MD5 message digests on an arbitrary number of files
 Summary(pl):	Obliczanie skrótów MD5 dla dowolnej liczby plików
 Name:		md5deep
-Version:	1.10
+Version:	1.12
 Release:	1
 License:	GPL
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/md5deep/%{name}-%{version}.tar.gz
-# Source0-md5:	ec3bdc9d8d3e63c0af76c9c578e048a1
+# Source0-md5:	a86d2d2b25b8dfd4cee7a130ef388b28
 Patch0:		%{name}-Makefile.patch
 URL:		http://md5deep.sourceforge.net/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
