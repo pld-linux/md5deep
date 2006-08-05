@@ -48,6 +48,7 @@ ma nastêpuj±ce dodatkowe mo¿liwo¶ci:
 
 %build
 %{__make} \
+	LDFLAGS="%{rpmldflags}" \
 	OURCC="%{__cc}" \
 	OPTFLAGS="%{rpmcflags}"
 
