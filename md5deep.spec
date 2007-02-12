@@ -1,5 +1,5 @@
 Summary:	Compute MD5 message digests on an arbitrary number of files
-Summary(pl):	Obliczanie skrótów MD5 dla dowolnej liczby plików
+Summary(pl.UTF-8):   Obliczanie skrÃ³tÃ³w MD5 dla dowolnej liczby plikÃ³w
 Name:		md5deep
 Version:	1.12
 Release:	1
@@ -27,20 +27,20 @@ package, but has the following additional features:
   those input files that match the list of known hashes or those that do
   not match.
 
-%description -l pl
-md5deep to wieloplatformowy program do obliczania skrótów MD5 dla
-dowolnej liczby plików. Program dzia³a pod Windows, Linuksem, FreeBSD,
-OS X, Solarisem i powinien dzia³aæ na wiêkszo¶ci innych platform.
+%description -l pl.UTF-8
+md5deep to wieloplatformowy program do obliczania skrÃ³tÃ³w MD5 dla
+dowolnej liczby plikÃ³w. Program dziaÅ‚a pod Windows, Linuksem, FreeBSD,
+OS X, Solarisem i powinien dziaÅ‚aÄ‡ na wiÄ™kszoÅ›ci innych platform.
 md5deep jest podobny do programu md5sum z pakietu GNU Coreutils, ale
-ma nastêpuj±ce dodatkowe mo¿liwo¶ci:
-- praca rekurencyjna - md5deep mo¿e rekurencyjnie sprawdzaæ ca³e
-  drzewo katalogów, obliczaj±c MD5 dla ka¿dego pliku w katalogu oraz dla
-  ka¿dego pliku we wszystkich jego podkatalogach;
-- szacowanie czasu - md5deep mo¿e pokazywaæ oszacowania czasu trwania
-  operacji przy przetwarzaniu bardzo du¿ych plików;
-- tryb porównywania - md5deep mo¿e dostaæ listê znanych skrótów i
-  porównywaæ je ze zbiorem plików wej¶ciowych; program mo¿e wypisaæ te
-  pliki, które pasuj± do listy znanych skrótów lub te, które nie pasuj±.
+ma nastÄ™pujÄ…ce dodatkowe moÅ¼liwoÅ›ci:
+- praca rekurencyjna - md5deep moÅ¼e rekurencyjnie sprawdzaÄ‡ caÅ‚e
+  drzewo katalogÃ³w, obliczajÄ…c MD5 dla kaÅ¼dego pliku w katalogu oraz dla
+  kaÅ¼dego pliku we wszystkich jego podkatalogach;
+- szacowanie czasu - md5deep moÅ¼e pokazywaÄ‡ oszacowania czasu trwania
+  operacji przy przetwarzaniu bardzo duÅ¼ych plikÃ³w;
+- tryb porÃ³wnywania - md5deep moÅ¼e dostaÄ‡ listÄ™ znanych skrÃ³tÃ³w i
+  porÃ³wnywaÄ‡ je ze zbiorem plikÃ³w wejÅ›ciowych; program moÅ¼e wypisaÄ‡ te
+  pliki, ktÃ³re pasujÄ… do listy znanych skrÃ³tÃ³w lub te, ktÃ³re nie pasujÄ….
 
 %prep
 %setup -q
