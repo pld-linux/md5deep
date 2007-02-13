@@ -1,5 +1,5 @@
 Summary:	Compute MD5 message digests on an arbitrary number of files
-Summary(pl.UTF-8):   Obliczanie skrótów MD5 dla dowolnej liczby plików
+Summary(pl.UTF-8):	Obliczanie skrótów MD5 dla dowolnej liczby plików
 Name:		md5deep
 Version:	1.12
 Release:	1
