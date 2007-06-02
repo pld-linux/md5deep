@@ -58,6 +58,11 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	PREFIX=$RPM_BUILD_ROOT%{_prefix}
 
+for m in  sha1deep.1  sha256deep.1  tigerdeep.1  whirlpooldeep.1; do
+	rm -f $RPM_BUILD_ROOT%{_mandir}/man1/$m
+	echo ".so md5deep.1" > $RPM_BUILD_ROOT%{_mandir}/man1/$m
+done
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
