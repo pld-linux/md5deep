@@ -1,17 +1,17 @@
-diff -Nur md5deep-1.12.orig/Makefile md5deep-1.12.Makefile/Makefile
---- md5deep-1.12.orig/Makefile	2006-04-03 03:18:07.000000000 +0200
-+++ md5deep-1.12.Makefile/Makefile	2006-08-05 16:27:15.000000000 +0200
+diff -urN md5deep-1.13/Makefile md5deep-1.13.new/Makefile
+--- md5deep-1.13/Makefile	2007-07-27 22:46:42.000000000 +0200
++++ md5deep-1.13.new/Makefile	2007-08-26 22:10:02.000000000 +0200
 @@ -1,13 +1,13 @@
 -
 -CC       = gcc
 -CFLAGS   = -Wall -W -O3
-+OURCC   := gcc
++OURCC	:= gcc
 +CC       = $(OURCC)
 +CFLAGS   = -Wall $(OPTFLAGS)
  LINK_OPT = -lm
  
  NAME     = md5deep
- VERSION  = 1.12
+ VERSION  = 1.13
  
  # Where we get installed
 -PREFIX = /usr/local
