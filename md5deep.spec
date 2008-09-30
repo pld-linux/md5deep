@@ -1,13 +1,12 @@
 Summary:	Compute MD5 message digests on an arbitrary number of files
 Summary(pl.UTF-8):	Obliczanie skrótów MD5 dla dowolnej liczby plików
 Name:		md5deep
-Version:	1.13
+Version:	3.1
 Release:	1
 License:	Public Domain
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/md5deep/%{name}-%{version}.tar.gz
-# Source0-md5:	e0fc5cffa676a9f8d42da78c781736ba
-Patch0:		%{name}-Makefile.patch
+# Source0-md5:	e040566200cb282e7948ed9f5f0adff3
 URL:		http://md5deep.sourceforge.net/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -44,9 +43,9 @@ ma następujące dodatkowe możliwości:
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
+%configure
 %{__make} \
 	LDFLAGS="%{rpmldflags}" \
 	OURCC="%{__cc}" \
@@ -55,19 +54,19 @@ ma następujące dodatkowe możliwości:
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__make} install \
-	PREFIX=$RPM_BUILD_ROOT%{_prefix}
+install -d $RPM_BUILD_ROOT{%{_bindir},%{_mandir}/man1}
 
-for m in  sha1deep.1  sha256deep.1  tigerdeep.1  whirlpooldeep.1; do
-	rm -f $RPM_BUILD_ROOT%{_mandir}/man1/$m
-	echo ".so md5deep.1" > $RPM_BUILD_ROOT%{_mandir}/man1/$m
+for m in md5deep.1 sha1deep.1 sha256deep.1 tigerdeep.1 whirlpooldeep.1; do
+	cp -f %{name}/$m $RPM_BUILD_ROOT%{_mandir}/man1
 done
+
+install %{name}/%{name} %{name}/sha1deep %{name}/sha256deep %{name}/tigerdeep %{name}/whirlpooldeep $RPM_BUILD_ROOT%{_bindir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc CHANGES README
+%doc README AUTHORS NEWS TODO ChangeLog
 %attr(755,root,root) %{_bindir}/*
 %{_mandir}/man1/*
