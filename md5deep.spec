@@ -46,27 +46,23 @@ ma następujące dodatkowe możliwości:
 
 %build
 %configure
-%{__make} \
-	LDFLAGS="%{rpmldflags}" \
-	OURCC="%{__cc}" \
-	OPTFLAGS="%{rpmcflags}"
+%{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT{%{_bindir},%{_mandir}/man1}
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT
 
-for m in md5deep.1 sha1deep.1 sha256deep.1 tigerdeep.1 whirlpooldeep.1; do
-	cp -f %{name}/$m $RPM_BUILD_ROOT%{_mandir}/man1
+for m in sha1deep.1 sha256deep.1 tigerdeep.1 whirlpooldeep.1; do
+	echo '.so md5deep.1' > $RPM_BUILD_ROOT%{_mandir}/man1/$m
 done
-
-install %{name}/%{name} %{name}/sha1deep %{name}/sha256deep %{name}/tigerdeep %{name}/whirlpooldeep $RPM_BUILD_ROOT%{_bindir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc README AUTHORS NEWS TODO ChangeLog
-%attr(755,root,root) %{_bindir}/*
-%{_mandir}/man1/*
+%doc AUTHORS COPYING ChangeLog NEWS README TODO
+%attr(755,root,root) %{_bindir}/*deep
+%{_mandir}/man1/*deep.1*
